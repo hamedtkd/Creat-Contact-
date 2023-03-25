@@ -1,12 +1,13 @@
+import { Link as ReactLink } from "react-router-dom";
+
 export const Link = ({children,...props}) => {
     return ( 
-        <div className="flex items-center justify-between">
-        <div className="text-sm">
-          <a {...props}>
+
+
+          <ReactLink {...props}>
             {children}
-          </a>
-        </div>
-      </div>
+          </ReactLink>
+
      );
 }
  

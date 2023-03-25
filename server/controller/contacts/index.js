@@ -7,8 +7,11 @@ const creatContact = async (req, res) => {
     const {
         name,
         number,
-        token,
     } = req.body
+    const {
+        authorization
+    } = req.headers;
+    const token = authorization
     if (!name)
         return res.status(400).json({
             massage: 'Enter name'
@@ -42,26 +45,63 @@ const creatContact = async (req, res) => {
 }
 const findContact = async (req, res) => {
     const {
-        token
-    } = req.body
+        authorization
+    } = req.headers;
 
+    const token = authorization
     if (!token)
         return res.status(404).json({
             massage: 'Something wrong! You must login first!',
         })
+
     function parseJwt(token) {
-        return (JSON.parse(Buffer.from(token?.split('.')[1], 'base64').toString()));
+        return (JSON.parse(Buffer.from(token ?.split('.')[1], 'base64').toString()));
     }
     const user = parseJwt(token)
     const id = user.id
-    const contacts = await Contacs.find({ id })
+    const contacts = await Contacs.find({
+        id
+    })
     // console.log(contacts);
     return res.status(200).json({
         massage: 'Users you craeted',
         contacts
     })
 }
+const updateContact = async (req, res) => {
+    const {
+        data
+    } = req.body
+    const id = data._id
+    const contact = await Contacs.findByIdAndUpdate(id, {
+        name: data ?.name,
+        number: data ?.number
+    })
+    return res.status(200).json({
+        message: "contact updated!"
+    })
+
+}
+const deleteContact = async (req, res) => {
+    const {
+        id
+    } = req.body
+    if(id) {
+        const contact = await Contacs.findByIdAndDelete(id)
+        return res.status(200).json({
+            message: "contact Deleted!!"
+        })}
+        else{
+            return res.status(400).json({
+                message: "sorry please try again!"
+            })
+        }
+
+
+}
 module.exports = {
     creatContact,
-    findContact
+    findContact,
+    updateContact,
+    deleteContact
 }

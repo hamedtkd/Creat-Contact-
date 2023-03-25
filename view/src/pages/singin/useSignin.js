@@ -5,6 +5,7 @@ import * as yup from 'yup';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import Cookies from 'js-cookie';
+import { BASE_INSTANCE } from '@/api/constant';
 
 export const useSignin  = () => {
     const signInSchema = yup.object({
@@ -27,6 +28,9 @@ export const useSignin  = () => {
           Cookies.set('token', res.data.token, {
             expires: 1
           })
+          // if (res.data.token){
+          //   BASE_INSTANCE.defaults.headers.common['Authorization'] = res.data.token
+          //  }
           toast.success(res.data.massage);
         } catch (ex) {
           toast.error(ex?.response?.data?.massage);
